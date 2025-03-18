@@ -1,12 +1,77 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Benim Web Sayfam</title>
+    <title>English Vocabulary Quiz</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        .option { display: block; margin: 10px auto; padding: 10px; width: 200px; border: none; cursor: pointer; font-size: 18px; }
+        .correct { background-color: lightgreen; }
+        .wrong { background-color: lightcoral; }
+    </style>
 </head>
 <body>
-    <h1>Merhaba, GitHub Pages!</h1>
-    <p>Bu benim ilk GitHub Pages web sitem.</p>
+    <h1>English Vocabulary Quiz</h1>
+    <p id="question">Loading...</p>
+    <div id="options"></div>
+    <button onclick="nextQuestion()">Next</button>
+
+    <script>
+        const words = [
+            { en: "Attentiveness", tr: "Dikkatlilik" },
+            { en: "Ambition", tr: "Hırs" },
+            { en: "Tentative", tr: "Geçici" },
+            { en: "Occupy", tr: "İşgal etmek" },
+            { en: "Brief", tr: "Kısa" },
+            { en: "Successive", tr: "Ardışık" },
+            { en: "Keen", tr: "İstekli" },
+            { en: "Pensive", tr: "Dalgın" },
+            { en: "Considerably", tr: "Önemli ölçüde" },
+            { en: "Bilaterally", tr: "İki taraflı olarak" }
+        ];
+        
+        let currentQuestion;
+        
+        function getRandomQuestion() {
+            currentQuestion = words[Math.floor(Math.random() * words.length)];
+            return Math.random() > 0.5 ? { question: currentQuestion.en, answer: currentQuestion.tr, lang: "tr" } : { question: currentQuestion.tr, answer: currentQuestion.en, lang: "en" };
+        }
+        
+        function generateOptions(correctAnswer) {
+            let options = words.map(w => w.tr === correctAnswer || w.en === correctAnswer ? correctAnswer : (Math.random() > 0.5 ? w.tr : w.en));
+            return [...new Set(options)].sort(() => Math.random() - 0.5).slice(0, 4);
+        }
+        
+        function loadQuestion() {
+            const quizData = getRandomQuestion();
+            document.getElementById("question").textContent = quizData.question;
+            const optionsDiv = document.getElementById("options");
+            optionsDiv.innerHTML = "";
+            
+            const options = generateOptions(quizData.answer);
+            options.forEach(option => {
+                const btn = document.createElement("button");
+                btn.textContent = option;
+                btn.classList.add("option");
+                btn.onclick = () => checkAnswer(btn, quizData.answer);
+                optionsDiv.appendChild(btn);
+            });
+        }
+        
+        function checkAnswer(button, correctAnswer) {
+            if (button.textContent === correctAnswer) {
+                button.classList.add("correct");
+            } else {
+                button.classList.add("wrong");
+            }
+        }
+        
+        function nextQuestion() {
+            loadQuestion();
+        }
+        
+        loadQuestion();
+    </script>
 </body>
 </html>
